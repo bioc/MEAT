@@ -41,3 +41,5 @@ Suggests:
 biocViews: Epigenetics, DNAMethylation, Microarray, Normalization, BiomedicalInformatics, MethylationArray, Preprocessing
 Encoding: UTF-8
 RoxygenNote: 7.0.2
+URL: https://github.com/sarah-voisin/MEAT
+BugReports: https://github.com/sarah-voisin/MEAT/issues
