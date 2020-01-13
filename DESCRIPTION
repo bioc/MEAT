@@ -1,0 +1,44 @@
+Package: MEAT
+Title: Muscle Epigenetic Age Test
+Version: 0.99.0
+Description: This package estimates epigenetic age in skeletal muscle,
+    using DNA methylation data generated with
+    Illumina Infinium technology (HM27, HM450 and HMEPIC).
+Authors@R: c(
+    person(given = "Sarah",
+           family = "Voisin",
+           role = c("aut", "cre"),
+           email = "sarah.voisin.aeris@gmail.com",
+           comment = c(ORCID = "0000-0002-4074-7083")),
+    person(given = "Steve",
+           family = "Horvath",
+           role = c("ctb"),
+           email = "SHorvath@mednet.ucla.edu",
+           comment = c(ORCID = "0000-0002-4110-3589"))
+    )
+License: MIT + file LICENSE
+LazyData: true
+Depends: R (>= 3.6)
+Imports:
+    impute (>= 1.58),
+    dynamicTreeCut (>= 1.63),
+    glmnet (>= 2.0),
+    grDevices,
+    graphics,
+    stats,
+    utils,
+    stringr,
+    tibble,
+    RPMM (>= 1.25),
+    minfi (>= 1.30),
+    dplyr
+VignetteBuilder: knitr    
+Suggests: 
+    knitr,
+    rmarkdown,
+    BiocStyle,
+    testthat (>= 2.1.0)
+biocViews: Epigenetics, DNAMethylation, Microarray, Normalization, BiomedicalInformatics, MethylationArray, Preprocessing
+URL: https://www.biorxiv.org/content/10.1101/821009v3
+Encoding: UTF-8
+RoxygenNote: 7.0.2
