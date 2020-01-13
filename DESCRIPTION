@@ -39,6 +39,5 @@ Suggests:
     BiocStyle,
     testthat (>= 2.1.0)
 biocViews: Epigenetics, DNAMethylation, Microarray, Normalization, BiomedicalInformatics, MethylationArray, Preprocessing
-URL: https://www.biorxiv.org/content/10.1101/821009v3
 Encoding: UTF-8
 RoxygenNote: 7.0.2
