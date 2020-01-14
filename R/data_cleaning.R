@@ -29,8 +29,7 @@ clean_beta <- function(beta) {
 
   # Check beta has row names
   if (!str_detect(rownames(beta)[1], "cg")) {
-    stop("Please make sure your beta-matrix
-         has row names corresponding to CpGs.")
+    stop("Please make sure your beta-matrix has row names corresponding to CpGs.")
   }
 
   # Reduce beta to the 19,401 CpGs used to calibrate the methylation profiles

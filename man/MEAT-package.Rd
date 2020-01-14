@@ -13,7 +13,8 @@ This package estimates epigenetic age in skeletal muscle,
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://www.biorxiv.org/content/10.1101/821009v3}
+  \item \url{https://github.com/sarah-voisin/MEAT}
+  \item Report bugs at \url{https://github.com/sarah-voisin/MEAT/issues}
 }
 
 }
