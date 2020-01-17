@@ -138,6 +138,7 @@ knitr::kable(GSE121961_epiage,
              caption = "Phenotypes corresponding to GSE121961 with AAdiff and AAresid added for each sample.")
 ```
 
+## Session information
 ```{r session info}
 sessionInfo()
 ```
