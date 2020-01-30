@@ -1,48 +1,67 @@
 #' Calibrate methylation data to a gold standard.
 #'
 #' \code{BMIQcalibration} uses an adapted version of the BMIQ algorithm to
-#' calibrate DNA methylation data from Illumina HumanMethylation arrays to
-#' the gold standard dataset used in the muscle clock (GSE50498).
+#' calibrate the beta-matrix stored in the input SummarizedExperiment object
+#' \code{SE} to the gold standard dataset used in the muscle clock (GSE50498).
 #'
 #' \code{BMIQcalibration} was created by Steve Horvath,
 #' largely based on the \code{\link[wateRmelon]{BMIQ}} function from
-#' Teschendorff 2013 to adjust for the type-2 bias in Illumina HM450
-#' and HMEPIC data. BMIQ stands for beta mixture quantile normalization.
+#' Teschendorff (2013) to adjust for the type-2 bias in Illumina HM450
+#' and HMEPIC arrays. BMIQ stands for beta mixture quantile normalization.
 #' Horvath fixed minor errors in the v_1.2 version of the BMIQ algorithm
 #' and changed the optimization algorithm to make the code more robust.
 #' He used method = "Nelder-Mead" in \code{\link[stats]{optim}} since
 #' the other optimization method sometimes gets stuck. Toward this end,
 #' the function \code{\link[RPMM]{blc}} was replaced by \code{blc2}.
-#' \code{datM} needs to be a matrix of beta-values that have been
-#' cleaned and reduced to the same CpGs as the gold standard,
-#' using the \code{\link{clean_beta}} function.
-#' Each sample in \code{datM} is iteratively calibrated to the
+#' \code{SE} needs to be a SummarizedExperiment object containing a matrix of
+#' beta-values that has been cleaned using \code{\link{clean_beta}}.
+#' Each sample in \code{SE} is iteratively calibrated to the
 #' gold standard values, so the time it takes to run
 #' \code{BMIQcalibration} is directly proportional to the number
-#' of samples in \code{datM}. This step is essential to estimate
+#' of samples in \code{SE}. This step is essential to estimate
 #' epigenetic age with accuracy.
-#' @param datM A matrix of beta values that have been cleaned
-#' with \code{\link{clean_beta}}, with samples in columns and
-#' CpGs in rows.
-#' @return A matrix of beta-values calibrated to the gold standard GSE50498.
+#' @param SE A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+#' The "assays" component of \code{SE} should contain a beta-matrix of
+#' DNA methylation beta-values called "beta" that has been cleaned with
+#' \code{\link{clean_beta}}.
+#' \code{SE} may optionally contain annotation information on the CpGs stored
+#' in "rowData" and sample phenotypes stored in "colData".
+#' @return A calibrated version of the input \code{SE} calibrated to the gold
+#' standard dataset GSE50498.
 #' @export
+#' @import SummarizedExperiment
+#' @importFrom stats density pbeta qbeta lm coef optim dbeta predict resid lm
 #' @importFrom dynamicTreeCut printFlush
 #' @import RPMM
 #' @import grDevices
 #' @import graphics
-#' @import stats
 #' @import minfi
 #' @seealso \code{\link{clean_beta}} to get the DNA methylation matrix ready
 #' for calibration,
 #' \code{\link[wateRmelon]{BMIQ}} for the original BMIQ algorithm and
 #' \url{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-10-r115}
-#' for the original paper describing Horvath's adapted BMIQ algorithm.
+#' for the original paper describing Horvath's adapted BMIQ algorithm, and
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} for more
+#' details on how to create and manipulate SummarizedExperiment objects.
 #' @examples
+#' # Load matrix of beta-values of two individuals from dataset GSE121961
 #' data("GSE121961", envir = environment())
-#' GSE121961_clean <- clean_beta(beta = GSE121961)
-#' GSE121961_calibrated <- BMIQcalibration(datM = GSE121961_clean)
+#' # Load phenotypes of the two individuals from dataset GSE121961
+#' data("GSE121961_pheno", envir = environment())
 #'
-BMIQcalibration <- function(datM) {
+#' # Create a SummarizedExperiment object to coordinate phenotypes and
+#' # methylation into one object.
+#' library(SummarizedExperiment)
+#' GSE121961_SE <- SummarizedExperiment(assays=list(beta=GSE121961),
+#' colData=GSE121961_pheno)
+#'
+#' # Run clean_beta() to clean the beta-matrix
+#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+#'
+#' # Run BMIQcalibration() to calibrate the clean beta-matrix
+#' GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
+#'
+BMIQcalibration <- function(SE) {
   gold.mean <- NULL
   data("gold.mean", envir = environment())
   goldstandard.beta <- gold.mean$gold.mean
@@ -54,10 +73,22 @@ BMIQcalibration <- function(datM) {
   niter <- 5
   tol <- 0.001
   calibrateUnitInterval <- TRUE
+
+  # Check whether SE is a SummarizedExperiment object
+  if (class(SE)!="SummarizedExperiment")
+    stop("Please make sure SE is a SummarizedExperiment object.")
+
+  # Check that the beta-matrix is indeed called "beta"
+  if (names(assays(SE))!="beta")
+    stop("Please make sure that the beta-matrix stored in the assays component of SE is called beta.")
+
+  datM <- assays(SE)$beta
+
   datM <- t(datM)
   if (length(goldstandard.beta) != dim(datM)[[2]]) {
-    stop("The number of probes in datM does not match the number of probes in
-         the gold standard dataset (19,401). Consider transposing datM.")
+    stop("The number of probes of the the beta-matrix store in SE does not match
+    the number of probes in the gold standard dataset (19,401).
+         Consider transposing the beta-matrix.")
   }
   beta1.v <- goldstandard.beta
 
@@ -222,6 +253,9 @@ BMIQcalibration <- function(datM) {
     datM[ii, ] <- nbeta2.v
   }  # end of for (ii=1 loop
   t(datM)
+SE2 <- SE
+assays(SE2)$beta <- t(datM)
+return(SE2)
 }  # end of function BMIQcalibration
 
 

@@ -4,33 +4,53 @@
 \alias{clean_beta}
 \title{Clean beta-matrix.}
 \usage{
-clean_beta(beta)
+clean_beta(SE = NULL)
 }
 \arguments{
-\item{beta}{A matrix or data frame of DNA methylation beta-values,
-with samples in columns and CpGs in rows.}
+\item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+The "assays" component of \code{SE} should contain a beta-matrix of
+DNA methylation beta-values called "beta", with samples in columns
+and CpGs in rows.
+\code{SE} may optionally contain annotation information on the CpGs
+stored in "rowData" and sample phenotypes stored in "colData".}
 }
 \value{
-A clean version of the input \code{beta} reduced to 19,401 CpGs,
+A clean version of the input \code{SE} reduced to 19,401 CpGs,
 with missing values imputed, and without 0 or 1 values.
 }
 \description{
-\code{clean_beta} reduces \code{beta} to the right CpGs, imputes missing
+\code{clean_beta} reduces the beta-matrix stored in the input
+SummarizedExperiment object \code{SE} to the right CpGs, imputes missing
 values if any, and replaces 0 and 1 with min and max values.
 }
 \details{
-\code{clean_beta} will
-1) reduce \code{beta} to the 19,401 CpGs used
-to calibrate DNA methylation profiles to the gold standard,
-2) check whether \code{beta} contains missing values,
-and impute them with \code{\link[impute]{impute.knn}},
-3) check whether \code{beta} contains 0 and 1 values, and if any,
-change them to the minimum non-0 and maximum non-1 values in \code{beta}.
+\code{clean_beta} will transform the the beta-matrix stored in \code{SE} by:
+1) reducing it to the 19,401 CpGs used to calibrate DNA methylation profiles
+to the gold standard
+2) checking whether it contains missing values, and impute them with
+\code{\link[impute]{impute.knn}},
+3) check whether it contains 0 and 1 values, and if any, change them to the
+minimum non-0 and maximum non-1 values in the beta-matrix.
 }
 \examples{
+# Load matrix of beta-values of two individuals from dataset GSE121961
 data("GSE121961", envir = environment())
-GSE121961_clean <- clean_beta(beta = GSE121961)
+# Load phenotypes of the two individuals from dataset GSE121961
+data("GSE121961_pheno", envir = environment())
+
+# Create a SummarizedExperiment object to coordinate phenotypes and
+# methylation into one object.
+library(SummarizedExperiment)
+GSE121961_SE <- SummarizedExperiment(assays=list(beta=GSE121961),
+colData=GSE121961_pheno)
+
+# Run clean_beta() to clean the beta-matrix
+GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
 }
 \seealso{
-\code{\link[impute]{impute.knn}} for imputation of missing values.
+\code{\link[impute]{impute.knn}} for imputation of missing values,
+and \code{\link[SummarizedExperiment]{SummarizedExperiment}} for more
+details on how to create and manipulate SummarizedExperiment objects.
+
+
 }

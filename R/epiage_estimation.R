@@ -1,66 +1,87 @@
 #' Estimates age in skeletal muscle from calibrated DNA methylation profiles.
 #'
-#' \code{epiage_estimation} takes as input a calibrated methylation matrix of
-#' beta-values and uses the muscle clock to estimate age.
+#' \code{epiage_estimation} takes as input a
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} object whose
+#' assays contain a beta-matrix called "beta". This beta-matrix should contain
+#' DNA methylation profiles in skeletal muscle that have been cleaned with
+#' \code{\link{clean_beta}} and calibrated with \code{\link{BMIQcalibration}}.
+#' \code{epiage_estimation} will use the muscle clock to estimate epigenetic age
+#' in each sample.
 #'
-#' \code{epiage_estimation} estimates age for each sample in the input
-#' \code{beta} DNA methylation matrix based on DNA methylation profiles.
-#' \code{beta} needs to be a matrix of beta-values that have been calibrated
-#' to the gold standard GSE50498 using \code{\link{BMIQcalibration}}.
-#' @param beta A matrix with beta values that have been calibrated to
-#' the gold standard GSE50498 using \code{\link{BMIQcalibration}},
-#' with samples in columns and CpGs in rows.
-#' @param pheno An optional data frame, matrix or tibble containing information
-#' on the samples such as age, sex, disease status, etc.
-#' @param ID_col_name The name of the column in \code{pheno} that contains
-#' the sample IDs corresponding to the column names of \code{beta}.
-#' @param age_col_name The name of the column in \code{pheno} that contains
-#' age (in years).
+#' \code{epiage_estimation} estimates epigenetic age for each sample in the
+#' input \code{SE} based on DNA methylation profiles. \code{SE} needs to be a
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} object containing
+#' a matrix of beta-values called "beta" in assays. Beta must have been
+#' calibrated to the gold standard GSE50498 using \code{\link{BMIQcalibration}}
+#' to obtain good estimates of epigenetic age.
 #'
-#' @return A list containing the following items:
+#' @param SE A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+#' The "assays" component of \code{SE} should contain a beta-matrix of
+#' DNA methylation beta-values called "beta" that has been cleaned with
+#' \code{\link{clean_beta}} and calibrated with \code{\link{BMIQcalibration}}.
+#' \code{SE} may optionally contain annotation information on the CpGs
+#' stored in "rowData" and sample phenotypes stored in "colData".
+#' @param age_col_name The name of the column in colData from \code{SE} that
+#' contains age (in years).
+#'
+#' @return A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
+#' identical to the input \code{SE}, with components added to colData. If no
+#' phenotypes were provided in the colData of the input \code{SE},
+#' \code{epiage_estimation} will put in colData a tibble containing a single
+#' column called "DNAmage", corresponding to epigenetic age (in years) for each
+#' sample. If phenotypes were provided in the colData of the input \code{SE},
+#' \code{epiage_estimation} will add to the existing colData three columns:
 #' \enumerate{
-#'   \item \code{DNAmage} A numeric vector of predicted age (in years)
-#'   for each sample in \code{beta} based on DNA methylation profiles.
-#'   \item \code{AAdiff} An optional numeric vector corresponding to the
-#'   difference between predicted and actual age (in years) for each sample
-#'   in \code{beta}. This is only returned if \code{age_col_name} is not null.
-#'   \item \code{AAresid} An optional numeric vector corresponding to
-#'   the residuals of linear model (using \code{\link[stats]{lm}}) of
-#'   predicted against actual age  for each sample in \code{beta}.
-#'   This is only returned if \code{age_col_name} is not null.
+#'   \item \code{DNAmage} epigenetic age (in years)
+#'   \item \code{AAdiff} the difference between predicted and actual age
+#'   (in years).
+#'   \item \code{AAresid} the residuals of a linear model
+#'   (using \code{\link[stats]{lm}}) of DNAmage against actual age.
+#'   \code{AAresid} is only returned if the number of samples is > 2, as
+#'   \code{AAresid} cannot be calculated with < 2 samples.
 #' }
 #' @export
+#' @import SummarizedExperiment
 #' @import glmnet
 #' @importFrom dplyr pull
 #' @import tibble
 #' @seealso \code{\link[wateRmelon]{BMIQ}} for the original BMIQ algorithm,
 #' \url{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-10-r115}
 #' for the adapted version of the BMIQ algorithm, and
-#' \url{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-10-r115}
+#' \url{https://www.biorxiv.org/content/10.1101/821009v3}
 #' for the elastic net model of the muscle clock.
 #' @examples
+#' # Load matrix of beta-values of two individuals from dataset GSE121961
 #' data("GSE121961", envir = environment())
-#' GSE121961_clean <- clean_beta(beta = GSE121961)
-#' GSE121961_calibrated <- BMIQcalibration(datM = GSE121961_clean)
-#'
-#' # Example without specifying phenotypes
-#' # (output = predicted age only)
-#' GSE121961_epiage <- epiage_estimation(beta = GSE121961_calibrated)
-#'
-#' # Example with phenotypes
-#' # (output = predicted age,
-#' # age acceleration difference and age acceleration residual)
+#' # Load phenotypes of the two individuals from dataset GSE121961
 #' data("GSE121961_pheno", envir = environment())
-#' GSE121961_epiage <- epiage_estimation(
-#'   beta = GSE121961_calibrated,
-#'   pheno = GSE121961_pheno,
-#'   ID_col_name = "ID",
-#'   age_col_name = "Age"
-#' )
-epiage_estimation <- function(beta, pheno = NULL, ID_col_name = NULL, age_col_name = NULL) {
-  # If pheno is a matrix or a data frame, convert to tibble
-  if (!is_tibble(pheno))
-    pheno <- as_tibble(pheno)
+#'
+#' # Create a SummarizedExperiment object to coordinate phenotypes and
+#' # methylation into one object.
+#' library(SummarizedExperiment)
+#' GSE121961_SE <- SummarizedExperiment(assays=list(beta=GSE121961),
+#' colData=GSE121961_pheno)
+#'
+#' # Run clean_beta() to clean the beta-matrix
+#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+#'
+#' # Run BMIQcalibration() to calibrate the clean beta-matrix
+#' GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
+#'
+#' # Run epiage_estimation() to obtain DNAmage + optionally AAdiff and AAresid
+#' GSE121961_SE_epiage <- epiage_estimation(SE = GSE121961_SE_calibrated,
+#' age_col_name = "Age")
+#' colData(GSE121961_SE_epiage)
+epiage_estimation <- function(SE = NULL,
+                              age_col_name = NULL) {
+
+  # Check whether SE is a SummarizedExperiment object
+  if (class(SE)!="SummarizedExperiment")
+    stop("Please make sure SE is a SummarizedExperiment object.")
+
+  # Check that the beta-matrix is indeed called "beta"
+  if (names(assays(SE))!="beta")
+    stop("Please make sure that the beta-matrix stored in the assays component of SE is called beta.")
 
   # Load the elastic net model
   elasticnet_model <- NULL
@@ -69,21 +90,48 @@ epiage_estimation <- function(beta, pheno = NULL, ID_col_name = NULL, age_col_na
 
   # Predict age based on calibrated DNA methylation profile
   DNAmage <- NULL
-  DNAmage <- anti.trafo(predict(elasticnet_model, t(beta), type = "response", s = lambda.glmnet.Training))[,
-                                                                                                           1]
-  if (is.null(age_col_name)) {
+  DNAmage <- anti.trafo(predict(elasticnet_model,
+                                t(assays(SE)$beta),
+                                type = "response",
+                                s = lambda.glmnet.Training))[,1]
+
+  if (ncol(colData(SE))==0) {
     AAdiff <- NULL
     AAresid <- NULL
-    return(DNAmage)
+    SE2 <- SummarizedExperiment(assays = assays(SE),
+                               rowData = rowData(SE),
+                               colData = as.data.frame(DNAmage))
+    message("There are no phenotypes provided in colData, so only DNAmage will
+            be returned.")
   } else {
+    pheno <- colData(SE)
+
+    # Check that the column name for age does exist in colData
+    if (!age_col_name %in% colnames(pheno))
+      stop(paste0("colData does not contain a column called ",age_col_name,
+                     ". Please check the column names of colData."))
+
+    pheno <- as_tibble(pheno)
     Age <- pull(pheno[, age_col_name])
-    print(Age)
     AAdiff <- DNAmage - Age
-    AAresid <- AAdiff
-    AAresid_noNA <- resid(lm(DNAmage ~ Age))
-    AAresid[!is.na(AAresid)] <- AAresid_noNA
-    return(data.frame(pheno, DNAmage, AAdiff, AAresid))
+    pheno <- data.frame(as.data.frame(pheno),AAdiff)
+    if (nrow(pheno)>2)
+    {
+      AAresid <- AAdiff
+      AAresid_noNA <- resid(lm(DNAmage ~ Age))
+      AAresid[!is.na(AAresid)] <- AAresid_noNA
+      pheno <- data.frame(pheno,AAresid)
+    }
+    else
+    {
+      message("You only have two samples in SE, so only DNAmage and AAdiff
+              will be returned.")
+    }
+    SE2 <- SummarizedExperiment(assays = assays(SE),
+                                  rowData = rowData(SE),
+                                  colData = pheno)
   }
+  return(SE2)
 }
 
 anti.trafo <- function(x, adult.age = 20) {

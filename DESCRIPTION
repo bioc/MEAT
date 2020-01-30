@@ -18,7 +18,7 @@ Authors@R: c(
     )
 License: MIT + file LICENSE
 LazyData: true
-Depends: R (>= 4.0)
+Depends: R (>= 3.6)
 Imports:
     impute (>= 1.58),
     dynamicTreeCut (>= 1.63),
@@ -31,7 +31,8 @@ Imports:
     tibble,
     RPMM (>= 1.25),
     minfi (>= 1.30),
-    dplyr
+    dplyr,
+    SummarizedExperiment
 VignetteBuilder: knitr    
 Suggests: 
     knitr,
