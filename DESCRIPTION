@@ -18,7 +18,7 @@ Authors@R: c(
     )
 License: MIT + file LICENSE
 LazyData: true
-Depends: R (>= 3.6)
+Depends: R (>= 4.0)
 Imports:
     impute (>= 1.58),
     dynamicTreeCut (>= 1.63),
