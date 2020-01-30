@@ -46,7 +46,7 @@
 clean_beta <- function(SE=NULL) {
 
   # Check whether SE is a SummarizedExperiment object
-  if (class(SE)!="SummarizedExperiment")
+  if (!is(SE, "SummarizedExperiment"))
     stop("Please make sure SE is a SummarizedExperiment object.")
 
   # Check that the beta-matrix is indeed called "beta"
