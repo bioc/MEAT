@@ -1,3 +1,5 @@
+# MEAT 0.99.2
+
 # MEAT 0.99.1
 
 # Changes in version 0.99.0 (2020-01-09)
