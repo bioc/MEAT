@@ -32,6 +32,7 @@
 #' @import SummarizedExperiment
 #' @importFrom stats density pbeta qbeta lm coef optim dbeta predict resid lm
 #' @importFrom dynamicTreeCut printFlush
+#' @importFrom wateRmelon BMIQ
 #' @import RPMM
 #' @import grDevices
 #' @import graphics
