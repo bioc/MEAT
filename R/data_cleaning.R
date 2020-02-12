@@ -12,7 +12,7 @@
 #' 3) check whether it contains 0 and 1 values, and if any, change them to the
 #' minimum non-0 and maximum non-1 values in the beta-matrix.
 #'
-#' @param SE A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+#' @param SE A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
 #' The "assays" component of \code{SE} should contain a beta-matrix of
 #' DNA methylation beta-values called "beta", with samples in columns
 #' and CpGs in rows.
@@ -26,7 +26,7 @@
 #' @importFrom utils data
 #' @importFrom stringr str_detect
 #' @seealso \code{\link[impute]{impute.knn}} for imputation of missing values,
-#' and \code{\link[SummarizedExperiment]{SummarizedExperiment}} for more
+#' and \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} for more
 #' details on how to create and manipulate SummarizedExperiment objects.
 #' @seealso
 #' @examples

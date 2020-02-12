@@ -1,7 +1,7 @@
 #' Estimates age in skeletal muscle from calibrated DNA methylation profiles.
 #'
 #' \code{epiage_estimation} takes as input a
-#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} object whose
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object whose
 #' assays contain a beta-matrix called "beta". This beta-matrix should contain
 #' DNA methylation profiles in skeletal muscle that have been cleaned with
 #' \code{\link{clean_beta}} and calibrated with \code{\link{BMIQcalibration}}.
@@ -10,12 +10,12 @@
 #'
 #' \code{epiage_estimation} estimates epigenetic age for each sample in the
 #' input \code{SE} based on DNA methylation profiles. \code{SE} needs to be a
-#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} object containing
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object containing
 #' a matrix of beta-values called "beta" in assays. Beta must have been
 #' calibrated to the gold standard GSE50498 using \code{\link{BMIQcalibration}}
 #' to obtain good estimates of epigenetic age.
 #'
-#' @param SE A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+#' @param SE A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
 #' The "assays" component of \code{SE} should contain a beta-matrix of
 #' DNA methylation beta-values called "beta" that has been cleaned with
 #' \code{\link{clean_beta}} and calibrated with \code{\link{BMIQcalibration}}.
@@ -24,7 +24,7 @@
 #' @param age_col_name The name of the column in colData from \code{SE} that
 #' contains age (in years).
 #'
-#' @return A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
+#' @return A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object
 #' identical to the input \code{SE}, with components added to colData. If no
 #' phenotypes were provided in the colData of the input \code{SE},
 #' \code{epiage_estimation} will put in colData a tibble containing a single
