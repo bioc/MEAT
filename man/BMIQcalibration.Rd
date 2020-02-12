@@ -7,7 +7,7 @@
 BMIQcalibration(SE)
 }
 \arguments{
-\item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+\item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
 The "assays" component of \code{SE} should contain a beta-matrix of
 DNA methylation beta-values called "beta" that has been cleaned with
 \code{\link{clean_beta}}.
@@ -66,6 +66,6 @@ for calibration,
 \code{\link[wateRmelon]{BMIQ}} for the original BMIQ algorithm and
 \url{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-10-r115}
 for the original paper describing Horvath's adapted BMIQ algorithm, and
-\code{\link[SummarizedExperiment]{SummarizedExperiment}} for more
+\code{\link[SummarizedExperiment]{SummarizedExperiment-class}} for more
 details on how to create and manipulate SummarizedExperiment objects.
 }

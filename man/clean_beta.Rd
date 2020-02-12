@@ -7,7 +7,7 @@
 clean_beta(SE = NULL)
 }
 \arguments{
-\item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+\item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
 The "assays" component of \code{SE} should contain a beta-matrix of
 DNA methylation beta-values called "beta", with samples in columns
 and CpGs in rows.
@@ -49,7 +49,7 @@ GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
 }
 \seealso{
 \code{\link[impute]{impute.knn}} for imputation of missing values,
-and \code{\link[SummarizedExperiment]{SummarizedExperiment}} for more
+and \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} for more
 details on how to create and manipulate SummarizedExperiment objects.
 
 
