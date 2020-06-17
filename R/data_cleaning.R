@@ -70,6 +70,7 @@ clean_beta <- function(SE=NULL) {
   CpGs <- as.character(gold.mean[, "CpGs"])
 
   # Check that the beta-matrix row names contain the CpGs
+  
   L <- length(intersect(CpGs, rownames(SE)))
   message(paste("Your beta-matrix contains", L, "of the 19401 CpGs needed to calibrate methylation profiles."))
 
@@ -77,8 +78,9 @@ clean_beta <- function(SE=NULL) {
     message("Your beta-matrix is missing > 10% of the 19,401 CpGs needed to calibrate the methylation profiles.
             Calibration may be off, which may impact the accuracy of epigenetic age estimation.")
   }
-
-  SE2 <- SE[CpGs, ]
+  
+  SE2 <- SummarizedExperiment(assays=list(beta=assays(SE)$beta[CpGs, ]),
+                              colData=colData(SE)) 
 
   message("-------------------Step 2-------------------------------")
   message("Checking for missing values in the beta-matrix.")
