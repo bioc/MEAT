@@ -6,7 +6,7 @@ author:
   email: "sarah.voisin.aeris@gmail.com"
 package: MEAT
 date: "`r Sys.Date()`"
-output:  BiocStyle::html_vignette
+output:  html_document
 vignette: >
   %\VignetteIndexEntry{MEAT}
   %\VignetteEngine{knitr::knitr}
@@ -54,18 +54,27 @@ library(MEAT)
 
 To use this guide, you will need in your inventory:
 
-* **a matrix or data frame of beta-values**. Epigenetic age estimation will be more accurate if the beta matrix is already preprocessed using one of the many available R packages intended for this purpose (e.g. [ChAMP](https://bioconductor.org/packages/release/bioc/vignettes/ChAMP/inst/doc/ChAMP.html)). Preprocessing typically involves probe and sample filtering, normalisation of Type I and Type II probes, and correction for batch effects. The beta-matrix should have *CpGs in rows* and *samples in columns*, like this:
+* **a matrix or data frame of beta-values**. Epigenetic age estimation will be more accurate if the beta matrix is already preprocessed using one of the many available R packages intended for this purpose (e.g. [ChAMP](https://bioconductor.org/packages/release/bioc/vignettes/ChAMP/inst/doc/ChAMP.html), [RnBeads](https://bioconductor.org/packages/release/bioc/html/RnBeads.html)). Preprocessing typically involves probe and sample filtering, normalisation of Type I and Type II probes, and correction for batch effects. The beta-matrix should have *CpGs in rows* and *samples in columns*, like this:
 ```{r Methylation matrix presentation}
 data("GSE121961", envir = environment())
-knitr::kable(head(GSE121961),
-             caption = "Top rows of the GSE121961 matrix before cleaning and calibration.")
+```
+```{r Methylation matrix presentation 2, echo = FALSE}
+library(knitr)
+library(kableExtra)
+head(GSE121961) %>%
+  kable(caption = "Top rows of the GSE121961 matrix before cleaning and calibration.") %>%
+  kable_styling()
 ```
 * **an optional phenotype table**. This phenotype table contains information on the samples provided in the beta-matrix, such as age (e.g. 0-122 years old for a human, 0-700 for an elf, 0-500 for a dwarf), sex (male, female, intersex), disease status (healthy/control, diseased/case/zombie delirium/hydrophobia/ogre poisoning), etc. The table should have *samples in rows* and *phenotypes in columns*, like this:
 ```{r Phenotype table presentation}
 data("GSE121961_pheno", envir = environment())
-knitr::kable(GSE121961_pheno,
-             caption = "Phenotypes corresponding to GSE121961.")
 ```
+```{r Phenotype table presentation 2, echo = FALSE}
+GSE121961_pheno %>%
+  kable(caption = "Phenotypes corresponding to GSE121961.") %>%
+  kable_styling()
+```
+
 The phenotype table is useful if you want to discover the AA of your samples and to associate this AA with a phenotype of interest (e.g. do elves show systematically lower AA than humans, therefore explaining their exceptional lifespans?)
 * **an optional annotation table**. This annotation table contains information on the CpGs in the beta-matrix, such as chromosome and genomic position, location with regards to CpG islands, closest or annotated gene, etc. This annotation table should contain *CpGs in rows* and *annotation in columns*.
 
@@ -85,8 +94,11 @@ GSE121961_SE
 The first important step is data 'cleaning', which essentially means *reducing the beta matrix to the 19,401 CpGs common to the 12 datasets used in the muscle clock*. If some of the 19,401 CpGs are not present in your beta-matrix, these missing values will be imputed.
 ```{r Data cleaning, message=FALSE, warning=FALSE}
 GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
-knitr::kable(head(assays(GSE121961_SE_clean)$beta),
-             caption = "Top rows of the GSE121961 beta matrix after cleaning.")
+```
+```{r Data cleaning 2, echo = FALSE}
+head(assays(GSE121961_SE_clean)$beta) %>%
+  kable(caption = "Top rows of the GSE121961 beta matrix after cleaning.") %>%
+  kable_styling()
 ```
 
 ## Step 3: Data calibration
@@ -95,9 +107,13 @@ The second step is data 'calibration', which essentially means *re-scaling the D
 It should be noted that this 'calibration' is entirely different from the previously mentioned data preprocessing (i.e. probe and sample filtering, normalisation of Type I and Type II probes, and correction for batch effects). The calibration implemented in _BMIQcalibration()_ does use code from the original BMIQ algorithm, but it is **not** used to normalize TypeI and TypeII probe methylation distribution. The _BMIQcalibration()_ of the MEAT package re-scales the methylation distribution of your samples to the gold standard dataset GSE50498 [](https://www.biorxiv.org/content/10.1101/821009v3).
 ```{r Data calibration, message=FALSE, warning=FALSE}
 GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
-knitr::kable(head(assays(GSE121961_SE_calibrated)$beta),
-             caption = "Top rows of the GSE121961 beta matrix after cleaning and calibration.")
 ```
+```{r Data calibration 2, echo=FALSE}
+head(assays(GSE121961_SE_calibrated)$beta) %>%
+  kable(caption = "Top rows of the GSE121961 beta matrix after cleaning and calibration.") %>%
+  kable_styling()
+```
+
 You can have a look at the distribution of DNA methylation before and after calibration with a density plot. On this plot, each line is an individual sample, and you can clearly see the bimodal distribution of DNA methylation data, with most CpGs harboring very low methylation levels (left side of the graph), very few CpGs with intermediate methylation levels, and some CpGs with high methylation levels.
 Before calibration, the profiles do not align well with that of the gold standard, and this is problematic to obtain accurate estimates of epigenetic age. However, after calibration, the samples' profiles overlap nicely with that of the gold standard.
 ```{r DNA methylation profile distribution before and after calibration, message=FALSE, warning=FALSE}
@@ -135,8 +151,11 @@ While AAdiff is a straightforward way of calculating the error in age prediction
 ```{r Epigenetic age estimation with phenotypes, message=FALSE, warning=FALSE}
 GSE121961_SE_epiage <- epiage_estimation(SE = GSE121961_SE_calibrated,
 age_col_name = "Age")
-knitr::kable(colData(GSE121961_SE_epiage),
-             caption = "Phenotypes corresponding to GSE121961 with AAdiff for each sample.")
+```
+```{r Epigenetic age estimation with phenotypes 2, echo = FALSE}
+colData(GSE121961_SE_epiage) %>%
+  kable(caption = "Phenotypes corresponding to GSE121961 with AAdiff for each sample.") %>%
+  kable_styling()
 ```
 
 ## Session information
