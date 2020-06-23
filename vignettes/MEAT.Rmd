@@ -5,6 +5,7 @@ author:
   affiliation: "Institute for Health and Sport (iHeS), Victoria University, Footscray, VIC 3011, Australia"
   email: "sarah.voisin.aeris@gmail.com"
 package: MEAT
+bibliography: MEAT.bib
 date: "`r Sys.Date()`"
 output:  html_document
 vignette: >
