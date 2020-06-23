@@ -1,0 +1,25 @@
+citHeader("To cite MEAT in publications, please use:")
+
+citEntry(entry = "article",
+  author = c(person("Sarah","Voisin"),
+  person(c("Nicholas","R"),"Harvey"),
+  person(c("Larisa","M"),"Haupt"),
+  person(c("Lyn","R"),"Griffiths"),
+  person(c("Kevin","J"),"Ashton"),
+  person(c("Vernon","G"),"Coffey"),
+  person(c("Thomas","M"),"Doering"),
+  person(c("Jamie-Lee","M"),"Thompson"),
+  person("Christian","Benedict"),
+  person("Jonathan","Cedernaes"),
+  person(c("Malene","E"),"Lindholm"),
+  person(c("Jeffrey","M"),"Craig"),
+  person(c("David","S"),"Rowlands"),
+  person(c("Adam","P"),"Sharples"),
+  person("Steve","Horvath"),
+  person("Nir","Eynon)),
+  title = "An epigenetic clock for human skeletal muscle",
+  journal="Journal of cachexia, sarcopenia and muscle",
+  year = "2020",
+  url = "https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556",
+  textVersion = "Voisin S, Harvey NR, Haupt LM, Griffiths LR, Ashton KJ, Coffey VG, et al. An epigenetic clock for human skeletal muscle. J Cachexia Sarcopenia Muscle. Germany; 2020;"
+)
