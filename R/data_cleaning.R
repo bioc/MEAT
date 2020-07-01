@@ -78,7 +78,8 @@ clean_beta <- function(SE=NULL) {
             Calibration may be off, which may impact the accuracy of epigenetic age estimation.")
   }
 
-  SE2 <- SE[CpGs, ]
+  SE2 <- SummarizedExperiment(assays=list(beta=assays(SE)$beta[CpGs, ]),
+                              colData=colData(SE))
 
   message("-------------------Step 2-------------------------------")
   message("Checking for missing values in the beta-matrix.")
