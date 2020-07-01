@@ -1,6 +1,6 @@
 Package: MEAT
 Title: Muscle Epigenetic Age Test
-Version: 1.0.2
+Version: 1.0.3
 Description: This package estimates epigenetic age in skeletal muscle,
     using DNA methylation data generated with
     Illumina Infinium technology (HM27, HM450 and HMEPIC).
