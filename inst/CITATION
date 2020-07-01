@@ -1,7 +1,10 @@
-citHeader("To cite MEAT in publications, please use:")
+citHeader("To cite MEAT in publications use:")
 
-citEntry(entry = "article",
-  author = c(person("Sarah","Voisin"),
+citEntry(
+  entry    = "Article",
+  title    = "{An epigenetic clock for human skeletal muscle}",
+  author   = c(
+  person("Sarah","Voisin"),
   person(c("Nicholas","R"),"Harvey"),
   person(c("Larisa","M"),"Haupt"),
   person(c("Lyn","R"),"Griffiths"),
@@ -16,10 +19,15 @@ citEntry(entry = "article",
   person(c("David","S"),"Rowlands"),
   person(c("Adam","P"),"Sharples"),
   person("Steve","Horvath"),
-  person("Nir","Eynon)),
-  title = "An epigenetic clock for human skeletal muscle",
-  journal="Journal of cachexia, sarcopenia and muscle",
-  year = "2020",
-  url = "https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556",
-  textVersion = "Voisin S, Harvey NR, Haupt LM, Griffiths LR, Ashton KJ, Coffey VG, et al. An epigenetic clock for human skeletal muscle. J Cachexia Sarcopenia Muscle. Germany; 2020;"
+  person("Nir","Eynon)
+  ),
+  journal  = "Journal of cachexia, sarcopenia and muscle",
+  year     = 2020,
+  volume   = "",
+  number   = "",
+  pages    = "",
+  url      = "https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556",
+  pubmed = "32067420",
+  doi = "10.1002/jcsm.12556"
+  
 )
