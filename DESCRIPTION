@@ -20,29 +20,19 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 4.0)
-Imports:
-    impute (>= 1.58),
-    dynamicTreeCut (>= 1.63),
-    glmnet (>= 2.0),
-    grDevices,
-    graphics,
-    stats,
-    utils,
-    stringr,
-    tibble,
-    RPMM (>= 1.25),
-    minfi (>= 1.30),
-    dplyr,
-    SummarizedExperiment,
-    wateRmelon
-VignetteBuilder: knitr    
-Suggests: 
-    knitr,
-    rmarkdown,
-    BiocStyle,
-    testthat (>= 2.1.0)
-biocViews: Epigenetics, DNAMethylation, Microarray, Normalization, BiomedicalInformatics, MethylationArray, Preprocessing
+Imports: impute (>= 1.58), dynamicTreeCut (>= 1.63), glmnet (>= 2.0),
+        grDevices, graphics, stats, utils, stringr, tibble, RPMM (>=
+        1.25), minfi (>= 1.30), dplyr, SummarizedExperiment, wateRmelon
+VignetteBuilder: knitr
+Suggests: knitr, rmarkdown, BiocStyle, testthat (>= 2.1.0)
+biocViews: Epigenetics, DNAMethylation, Microarray, Normalization,
+        BiomedicalInformatics, MethylationArray, Preprocessing
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 URL: https://github.com/sarah-voisin/MEAT
 BugReports: https://github.com/sarah-voisin/MEAT/issues
+NeedsCompilation: no
+Packaged: 2020-10-06 00:35:14 UTC; e5103562
+Author: Sarah Voisin [aut, cre] (<https://orcid.org/0000-0002-4074-7083>),
+  Steve Horvath [ctb] (<https://orcid.org/0000-0002-4110-3589>)
+Maintainer: Sarah Voisin <sarah.voisin.aeris@gmail.com>
