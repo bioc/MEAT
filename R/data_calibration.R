@@ -26,6 +26,10 @@
 #' \code{\link{clean_beta}}.
 #' \code{SE} may optionally contain annotation information on the CpGs stored
 #' in "rowData" and sample phenotypes stored in "colData".
+#' @param version A character specifying which version of the epigenetic clock
+#' you would like to use. Dy default, \code{version} is set to "MEAT2.0" for the
+#' second version of the epigenetic clock. If you would like to use the original
+#' version, set \code{version} to "MEAT".
 #' @return A calibrated version of the input \code{SE} calibrated to the gold
 #' standard dataset GSE50498.
 #' @export
@@ -57,15 +61,14 @@
 #' colData=GSE121961_pheno)
 #'
 #' # Run clean_beta() to clean the beta-matrix
-#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE, version = "MEAT2.0")
 #'
 #' # Run BMIQcalibration() to calibrate the clean beta-matrix
-#' GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
+#' GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean, version = "MEAT2.0")
 #'
-BMIQcalibration <- function(SE) {
+BMIQcalibration <- function(SE,
+                            version = "MEAT2.0") {
   gold.mean <- NULL
-  data("gold.mean", envir = environment())
-  goldstandard.beta <- gold.mean$gold.mean
   nL <- 3
   doH <- TRUE
   nfit <- 20000
@@ -83,6 +86,25 @@ BMIQcalibration <- function(SE) {
   if (names(assays(SE))!="beta")
     stop("Please make sure that the beta-matrix stored in the assays component of SE is called beta.")
 
+  # Check version is correct
+  if (!version %in% c("MEAT","MEAT2.0")) {
+    stop("Please provide a valid version for the muscle clock. Set version to either MEAT or MEAT2.0")
+  }
+
+  gold.mean.MEAT <- NULL
+  gold.mean.MEAT2.0 <- NULL
+  if (version=="MEAT")
+  {
+    data("gold.mean.MEAT",envir = environment())
+    gold.mean <- gold.mean.MEAT
+  }
+  else
+  {
+    data("gold.mean.MEAT2.0",envir = environment())
+    gold.mean <- gold.mean.MEAT2.0
+  }
+
+  goldstandard.beta <- gold.mean[,"gold.mean"]
   datM <- assays(SE)$beta
 
   datM <- t(datM)

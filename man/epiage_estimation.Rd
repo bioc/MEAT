@@ -4,7 +4,7 @@
 \alias{epiage_estimation}
 \title{Estimates age in skeletal muscle from calibrated DNA methylation profiles.}
 \usage{
-epiage_estimation(SE = NULL, age_col_name = NULL)
+epiage_estimation(SE = NULL, version = "MEAT2.0", age_col_name = NULL)
 }
 \arguments{
 \item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
@@ -13,6 +13,11 @@ DNA methylation beta-values called "beta" that has been cleaned with
 \code{\link{clean_beta}} and calibrated with \code{\link{BMIQcalibration}}.
 \code{SE} may optionally contain annotation information on the CpGs
 stored in "rowData" and sample phenotypes stored in "colData".}
+
+\item{version}{A character specifying which version of the epigenetic clock
+you would like to use. Dy default, \code{version} is set to "MEAT2.0" for the
+second version of the epigenetic clock. If you would like to use the original
+version, set \code{version} to "MEAT".}
 
 \item{age_col_name}{The name of the column in colData from \code{SE} that
 contains age (in years).}
@@ -26,13 +31,13 @@ column called "DNAmage", corresponding to epigenetic age (in years) for each
 sample. If phenotypes were provided in the colData of the input \code{SE},
 \code{epiage_estimation} will add to the existing colData three columns:
 \enumerate{
-  \item \code{DNAmage} epigenetic age (in years)
-  \item \code{AAdiff} the difference between predicted and actual age
-  (in years).
-  \item \code{AAresid} the residuals of a linear model
-  (using \code{\link[stats]{lm}}) of DNAmage against actual age.
-  \code{AAresid} is only returned if the number of samples is > 2, as
-  \code{AAresid} cannot be calculated with < 2 samples.
+\item \code{DNAmage} epigenetic age (in years)
+\item \code{AAdiff} the difference between predicted and actual age
+(in years).
+\item \code{AAresid} the residuals of a linear model
+(using \code{\link[stats]{lm}}) of DNAmage against actual age.
+\code{AAresid} is only returned if the number of samples is > 2, as
+\code{AAresid} cannot be calculated with < 2 samples.
 }
 }
 \description{
@@ -65,13 +70,16 @@ GSE121961_SE <- SummarizedExperiment(assays=list(beta=GSE121961),
 colData=GSE121961_pheno)
 
 # Run clean_beta() to clean the beta-matrix
-GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE,
+version = "MEAT2.0")
 
 # Run BMIQcalibration() to calibrate the clean beta-matrix
-GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
+GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean,
+version = "MEAT2.0")
 
 # Run epiage_estimation() to obtain DNAmage + optionally AAdiff and AAresid
 GSE121961_SE_epiage <- epiage_estimation(SE = GSE121961_SE_calibrated,
+version = "MEAT2.0",
 age_col_name = "Age")
 colData(GSE121961_SE_epiage)
 }
@@ -79,6 +87,6 @@ colData(GSE121961_SE_epiage)
 \code{\link[wateRmelon]{BMIQ}} for the original BMIQ algorithm,
 \url{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-10-r115}
 for the adapted version of the BMIQ algorithm, and
-\url{https://www.biorxiv.org/content/10.1101/821009v3}
+\url{https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556}
 for the elastic net model of the muscle clock.
 }

@@ -7,7 +7,7 @@
 \title{MEAT: Muscle Epigenetic Age Test}
 \description{
 This package estimates epigenetic age in skeletal muscle,
-    using DNA methylation data generated with
+    using DNA methylation data generated with the
     Illumina Infinium technology (HM27, HM450 and HMEPIC).
 }
 \seealso{

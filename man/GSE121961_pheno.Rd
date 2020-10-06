@@ -4,7 +4,9 @@
 \name{GSE121961_pheno}
 \alias{GSE121961_pheno}
 \title{GSE121961 phenotypes}
-\format{A data frame with 2 samples (rows) and 4 phenotypes (columns).}
+\format{
+A data frame with 2 samples (rows) and 4 phenotypes (columns).
+}
 \source{
 \url{https://onlinelibrary.wiley.com/doi/abs/10.1002/humu.23745}
 }

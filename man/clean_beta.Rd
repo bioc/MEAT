@@ -4,7 +4,7 @@
 \alias{clean_beta}
 \title{Clean beta-matrix.}
 \usage{
-clean_beta(SE = NULL)
+clean_beta(SE = NULL, version = "MEAT2.0")
 }
 \arguments{
 \item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
@@ -13,9 +13,14 @@ DNA methylation beta-values called "beta", with samples in columns
 and CpGs in rows.
 \code{SE} may optionally contain annotation information on the CpGs
 stored in "rowData" and sample phenotypes stored in "colData".}
+
+\item{version}{A character specifying which version of the epigenetic clock
+you would like to use. Dy default, \code{version} is set to "MEAT2.0" for the
+second version of the epigenetic clock. If you would like to use the original
+version, set \code{version} to "MEAT".}
 }
 \value{
-A clean version of the input \code{SE} reduced to 19,401 CpGs,
+A clean version of the input \code{SE} reduced to the right CpGs,
 with missing values imputed, and without 0 or 1 values.
 }
 \description{
@@ -25,12 +30,18 @@ values if any, and replaces 0 and 1 with min and max values.
 }
 \details{
 \code{clean_beta} will transform the the beta-matrix stored in \code{SE} by:
-1) reducing it to the 19,401 CpGs used to calibrate DNA methylation profiles
-to the gold standard
-2) checking whether it contains missing values, and impute them with
+\enumerate{
+\item reducing it to the CpGs used to calibrate DNA methylation profiles
+to the gold standard. By default, \code{clean_beta} will reduce your beta-matrix
+to the 18,666 CpGs used in the updated version of MEAT (MEAT 2.0).
+If you would like to use the original version of MEAT, \code{clean_beta}
+will reduce your data to the 19,401 CpGs that are in common between the 12
+datasets from the original publication.
+\item checking whether it contains missing values, and impute them with
 \code{\link[impute]{impute.knn}},
-3) check whether it contains 0 and 1 values, and if any, change them to the
+\item check whether it contains 0 and 1 values, and if any, change them to the
 minimum non-0 and maximum non-1 values in the beta-matrix.
+}
 }
 \examples{
 # Load matrix of beta-values of two individuals from dataset GSE121961
@@ -45,7 +56,7 @@ GSE121961_SE <- SummarizedExperiment(assays=list(beta=GSE121961),
 colData=GSE121961_pheno)
 
 # Run clean_beta() to clean the beta-matrix
-GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE, version = "MEAT2.0")
 }
 \seealso{
 \code{\link[impute]{impute.knn}} for imputation of missing values,
