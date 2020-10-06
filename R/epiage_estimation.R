@@ -21,6 +21,10 @@
 #' \code{\link{clean_beta}} and calibrated with \code{\link{BMIQcalibration}}.
 #' \code{SE} may optionally contain annotation information on the CpGs
 #' stored in "rowData" and sample phenotypes stored in "colData".
+#' @param version A character specifying which version of the epigenetic clock
+#' you would like to use. Dy default, \code{version} is set to "MEAT2.0" for the
+#' second version of the epigenetic clock. If you would like to use the original
+#' version, set \code{version} to "MEAT".
 #' @param age_col_name The name of the column in colData from \code{SE} that
 #' contains age (in years).
 #'
@@ -48,7 +52,7 @@
 #' @seealso \code{\link[wateRmelon]{BMIQ}} for the original BMIQ algorithm,
 #' \url{https://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-10-r115}
 #' for the adapted version of the BMIQ algorithm, and
-#' \url{https://www.biorxiv.org/content/10.1101/821009v3}
+#' \url{https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556}
 #' for the elastic net model of the muscle clock.
 #' @examples
 #' # Load matrix of beta-values of two individuals from dataset GSE121961
@@ -63,16 +67,20 @@
 #' colData=GSE121961_pheno)
 #'
 #' # Run clean_beta() to clean the beta-matrix
-#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE,
+#' version = "MEAT2.0")
 #'
 #' # Run BMIQcalibration() to calibrate the clean beta-matrix
-#' GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
+#' GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean,
+#' version = "MEAT2.0")
 #'
 #' # Run epiage_estimation() to obtain DNAmage + optionally AAdiff and AAresid
 #' GSE121961_SE_epiage <- epiage_estimation(SE = GSE121961_SE_calibrated,
+#' version = "MEAT2.0",
 #' age_col_name = "Age")
 #' colData(GSE121961_SE_epiage)
 epiage_estimation <- function(SE = NULL,
+                              version = "MEAT2.0",
                               age_col_name = NULL) {
 
   # Check whether SE is a SummarizedExperiment object
@@ -83,13 +91,32 @@ epiage_estimation <- function(SE = NULL,
   if (names(assays(SE))!="beta")
     stop("Please make sure that the beta-matrix stored in the assays component of SE is called beta.")
 
+  # Check version is correct
+  if (!version %in% c("MEAT","MEAT2.0")) {
+    stop("Please provide a valid version for the muscle clock. Set version to either MEAT or MEAT2.0")
+  }
+
   # Load the elastic net model
-  elasticnet_model <- NULL
-  data("elasticnet_model", envir = environment())
-  lambda.glmnet.Training <- 0.025
+  elasticnet_model_MEAT <- NULL
+  elasticnet_model_MEAT2.0 <- NULL
+  if (version=="MEAT")
+  {
+    data("elasticnet_model_MEAT",envir = environment())
+    elasticnet_model <- elasticnet_model_MEAT
+    lambda.glmnet.Training <- 0.025
+  }
+
+  else
+  {
+    data("elasticnet_model_MEAT2.0",envir = environment())
+    elasticnet_model <- elasticnet_model_MEAT2.0
+    lambda.glmnet.Training <- 0.027
+  }
+
 
   # Predict age based on calibrated DNA methylation profile
   DNAmage <- NULL
+  print(dim)
   DNAmage <- anti.trafo(predict(elasticnet_model,
                                 t(assays(SE)$beta),
                                 type = "response",
@@ -114,13 +141,16 @@ epiage_estimation <- function(SE = NULL,
     pheno <- as_tibble(pheno)
     Age <- pull(pheno[, age_col_name])
     AAdiff <- DNAmage - Age
-    pheno <- data.frame(as.data.frame(pheno),AAdiff)
+    pheno <- data.frame(as.data.frame(pheno),
+                        DNAmage,
+                        AAdiff)
     if (nrow(pheno)>2)
     {
       AAresid <- AAdiff
       AAresid_noNA <- resid(lm(DNAmage ~ Age))
       AAresid[!is.na(AAresid)] <- AAresid_noNA
-      pheno <- data.frame(pheno,AAresid)
+      pheno <- data.frame(pheno,
+                          AAresid)
     }
     else
     {

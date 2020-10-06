@@ -5,8 +5,12 @@
 #' values if any, and replaces 0 and 1 with min and max values.
 #'
 #' \code{clean_beta} will transform the the beta-matrix stored in \code{SE} by:
-#' 1) reducing it to the 19,401 CpGs used to calibrate DNA methylation profiles
-#' to the gold standard
+#' 1) reducing it to the CpGs used to calibrate DNA methylation profiles
+#' to the gold standard. By default, \code{clean_beta} will reduce your beta-matrix
+#' to the 18,666 CpGs used in the updated version of MEAT (MEAT 2.0).
+#' If you would like to use the original version of MEAT, \code{clean_beta}
+#' will reduce your data to the 19,401 CpGs that are in common between the 12
+#' datasets from the original publication.
 #' 2) checking whether it contains missing values, and impute them with
 #' \code{\link[impute]{impute.knn}},
 #' 3) check whether it contains 0 and 1 values, and if any, change them to the
@@ -18,8 +22,12 @@
 #' and CpGs in rows.
 #' \code{SE} may optionally contain annotation information on the CpGs
 #' stored in "rowData" and sample phenotypes stored in "colData".
+#' @param version A character specifying which version of the epigenetic clock
+#' you would like to use. Dy default, \code{version} is set to "MEAT2.0" for the
+#' second version of the epigenetic clock. If you would like to use the original
+#' version, set \code{version} to "MEAT".
 #'
-#' @return A clean version of the input \code{SE} reduced to 19,401 CpGs,
+#' @return A clean version of the input \code{SE} reduced to the right CpGs,
 #' with missing values imputed, and without 0 or 1 values.
 #' @export
 #' @import SummarizedExperiment
@@ -42,8 +50,9 @@
 #' colData=GSE121961_pheno)
 #'
 #' # Run clean_beta() to clean the beta-matrix
-#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
-clean_beta <- function(SE=NULL) {
+#' GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE, version = "MEAT2.0")
+clean_beta <- function(SE=NULL,
+                       version="MEAT2.0") {
 
   # Check whether SE is a SummarizedExperiment object
   if (!is(SE, "SummarizedExperiment"))
@@ -62,19 +71,35 @@ clean_beta <- function(SE=NULL) {
     stop("Please make sure your the row names of SE correspond to CpGs.")
   }
 
-  # Reduce beta to the 19,401 CpGs used to calibrate the methylation profiles
+  # Check version is correct
+  if (!version %in% c("MEAT","MEAT2.0")) {
+    stop("Please provide a valid version for the muscle clock. Set version to either MEAT or MEAT2.0")
+  }
+
+  # Reduce beta to the CpGs used to calibrate the methylation profiles
   message("-------------------Step 1-------------------------------")
-  message("Reducing your beta-matrix to the 19,401 CpGs used to calibrate methylation profiles in the muscle clock.")
-  gold.mean <- NULL
-  data("gold.mean", envir = environment())
+  gold.mean.MEAT <- NULL
+  gold.mean.MEAT2.0 <- NULL
+  if (version=="MEAT")
+  {
+    data("gold.mean.MEAT",envir = environment())
+    gold.mean <- gold.mean.MEAT
+  }
+  else
+  {
+    data("gold.mean.MEAT2.0",envir = environment())
+    gold.mean <- gold.mean.MEAT2.0
+  }
+
   CpGs <- as.character(gold.mean[, "CpGs"])
+  message(paste("Reducing your beta-matrix to the",length(CpGs),"CpGs used to calibrate methylation profiles in",version))
 
   # Check that the beta-matrix row names contain the CpGs
   L <- length(intersect(CpGs, rownames(SE)))
-  message(paste("Your beta-matrix contains", L, "of the 19401 CpGs needed to calibrate methylation profiles."))
+  message(paste("Your beta-matrix contains", L, "of the",length(CpGs),"CpGs needed to calibrate methylation profiles."))
 
-  if (L < 19401 * 0.9) {
-    message("Your beta-matrix is missing > 10% of the 19,401 CpGs needed to calibrate the methylation profiles.
+  if (L < length(CpGs) * 0.9) {
+    message("Your beta-matrix is missing > 10% of the",length(CpGs),"CpGs needed to calibrate the methylation profiles.
             Calibration may be off, which may impact the accuracy of epigenetic age estimation.")
   }
 

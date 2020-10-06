@@ -4,7 +4,9 @@
 \name{GSE121961}
 \alias{GSE121961}
 \title{GSE121961 methylation data}
-\format{A data frame with 866,091 CpGs (rows) and 2 individuals (columns)}
+\format{
+A data frame with 866,091 CpGs (rows) and 2 individuals (columns)
+}
 \source{
 \url{ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE121nnn/GSE121961/matrix/}
 }

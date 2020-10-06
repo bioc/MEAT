@@ -4,7 +4,7 @@
 \alias{BMIQcalibration}
 \title{Calibrate methylation data to a gold standard.}
 \usage{
-BMIQcalibration(SE)
+BMIQcalibration(SE, version = "MEAT2.0")
 }
 \arguments{
 \item{SE}{A \code{\link[SummarizedExperiment]{SummarizedExperiment-class}} object.
@@ -13,6 +13,11 @@ DNA methylation beta-values called "beta" that has been cleaned with
 \code{\link{clean_beta}}.
 \code{SE} may optionally contain annotation information on the CpGs stored
 in "rowData" and sample phenotypes stored in "colData".}
+
+\item{version}{A character specifying which version of the epigenetic clock
+you would like to use. Dy default, \code{version} is set to "MEAT2.0" for the
+second version of the epigenetic clock. If you would like to use the original
+version, set \code{version} to "MEAT".}
 }
 \value{
 A calibrated version of the input \code{SE} calibrated to the gold
@@ -54,10 +59,10 @@ GSE121961_SE <- SummarizedExperiment(assays=list(beta=GSE121961),
 colData=GSE121961_pheno)
 
 # Run clean_beta() to clean the beta-matrix
-GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE)
+GSE121961_SE_clean <- clean_beta(SE = GSE121961_SE, version = "MEAT2.0")
 
 # Run BMIQcalibration() to calibrate the clean beta-matrix
-GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean)
+GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean, version = "MEAT2.0")
 
 }
 \seealso{
