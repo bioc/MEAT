@@ -7,7 +7,7 @@
 #' \code{clean_beta} will transform the the beta-matrix stored in \code{SE} by:
 #' 1) reducing it to the CpGs used to calibrate DNA methylation profiles
 #' to the gold standard. By default, \code{clean_beta} will reduce your beta-matrix
-#' to the 18,666 CpGs used in the updated version of MEAT (MEAT 2.0).
+#' to the 18,747 CpGs used in the updated version of MEAT (MEAT 2.0).
 #' If you would like to use the original version of MEAT, \code{clean_beta}
 #' will reduce your data to the 19,401 CpGs that are in common between the 12
 #' datasets from the original publication.

@@ -110,7 +110,7 @@ epiage_estimation <- function(SE = NULL,
   {
     data("elasticnet_model_MEAT2.0",envir = environment())
     elasticnet_model <- elasticnet_model_MEAT2.0
-    lambda.glmnet.Training <- 0.027
+    lambda.glmnet.Training <- 0.033
   }
 
 
