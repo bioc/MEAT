@@ -4,7 +4,7 @@
 #' net model.
 #' @format A data frame with 201 rows and 6 variables:
 #' \describe{
-#'   \item{CpGs}{CpG name}
+#'   \item{CpG}{CpG name}
 #'   \item{Coefficient}{Weight given by the elastic net model to the CpG in the
 #'   to estimate epigenetic age}
 #'   \item{Chromosome}{Chromosome where the CpG is located}
@@ -16,8 +16,8 @@
 #'   to which we added annotation to long-range interaction promoters using
 #'   chromatin states in male skeletal muscle from the Roadmap Epigenomics
 #'   Project and GeneHancer information from the Genome Browser (hg38).}
-#'   }
 #'   \item{Chromatin_state_male_SM}{Chromatin state in male skeletal muscle
 #'   from the the Roadmap Epigenomics Project)}
+#'   }
 #' @source \url{https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556}
 "CpGs_in_MEAT"

@@ -3,9 +3,9 @@
 \docType{data}
 \name{gold.mean.MEAT2.0}
 \alias{gold.mean.MEAT2.0}
-\title{Mean methylation in dataset GSE50498 reduced to the 18,666 CpGs of MEAT 2.0}
+\title{Mean methylation in dataset GSE50498 reduced to the 18,747 CpGs of MEAT 2.0}
 \format{
-A data frame with 18,666 rows and 2 variables:
+A data frame with 18,747 rows and 2 variables:
 \describe{
 \item{CpGs}{CpG name}
 \item{gold.mean}{mean methylation across all samples
@@ -20,7 +20,7 @@ gold.mean.MEAT2.0
 }
 \description{
 Gold standard dataset GSE50498 containing the mean methylation
-across 24 young and 24 old individuals at the 18,666 CpGs used
+across 24 young and 24 old individuals at the 18,747 CpGs used
 to calibrate DNA methylation profiles.
 }
 \keyword{datasets}
