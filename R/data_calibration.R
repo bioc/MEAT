@@ -104,7 +104,7 @@ BMIQcalibration <- function(SE,
     gold.mean <- gold.mean.MEAT2.0
   }
 
-  goldstandard.beta <- gold.mean[,"gold.mean"]
+  goldstandard.beta <- gold.mean[,"gold.mean"] #extract gold mean
   datM <- assays(SE)$beta
 
   datM <- t(datM)
