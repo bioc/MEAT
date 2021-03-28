@@ -120,7 +120,7 @@ kable(head(assays(GSE121961_SE_clean)$beta),
 ## Step 3: Data calibration
 
 The second step is data 'calibration', which essentially means *re-scaling the DNA methylation profiles to that of the gold standard dataset used to develop the muscle clock*. This step harmonises differences in data processing, sample preparation, lab-to-lab variability, to obtain accurate measures of epigenetic age in your samples.
-It should be noted that this 'calibration' is entirely different from the previously mentioned data preprocessing (i.e. probe and sample filtering, normalisation of Type I and Type II probes, and correction for batch effects). The calibration implemented in _BMIQcalibration()_ does use code from the original BMIQ algorithm, but it is **not** used to normalize TypeI and TypeII probe methylation distribution. The _BMIQcalibration()_ of the MEAT package re-scales the methylation distribution of your samples to the gold standard dataset GSE50498.
+Note that this 'calibration' is entirely different from the previously mentioned data preprocessing (i.e. probe and sample filtering, normalisation of Type I and Type II probes, and correction for batch effects). The calibration implemented in _BMIQcalibration()_ does use code from the original BMIQ algorithm, but it is **not** used to normalize TypeI and TypeII probe methylation distribution. The _BMIQcalibration()_ of the MEAT package re-scales the methylation distribution of your samples to the gold standard dataset GSE50498.
 ```{r Data calibration, message=FALSE, warning=FALSE}
 GSE121961_SE_calibrated <- BMIQcalibration(SE = GSE121961_SE_clean,
                                            version = "MEAT2.0")
