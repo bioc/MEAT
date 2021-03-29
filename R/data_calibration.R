@@ -104,14 +104,13 @@ BMIQcalibration <- function(SE,
     gold.mean <- gold.mean.MEAT2.0
   }
 
-  goldstandard.beta <- gold.mean[,"gold.mean"]
+  goldstandard.beta <- gold.mean[,"gold.mean"] #extract gold mean
   datM <- assays(SE)$beta
 
   datM <- t(datM)
   if (length(goldstandard.beta) != dim(datM)[[2]]) {
-    stop("The number of probes of the the beta-matrix store in SE does not match
-    the number of probes in the gold standard dataset (19,401).
-         Consider transposing the beta-matrix.")
+    stop(paste0("The number of probes of the the beta-matrix store in SE does not match
+    the number of probes in the gold standard dataset (",length(goldstandard.beta),")."," Consider transposing the beta-matrix."))
   }
   beta1.v <- goldstandard.beta
 
