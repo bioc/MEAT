@@ -2,7 +2,7 @@
 title: "MEAT (Muscle Epigenetic Age Test)"
 author:
 - name: "Sarah Voisin"
-  affiliation: "Institute for Health and Sport (iHeS), Victoria University, Footscray, VIC 3011, Australia"
+  affiliation: "Institute for Health and Sport (IHES), Victoria University, Footscray, VIC 3011, Australia"
   email: "sarah.voisin.aeris@gmail.com"
 package: MEAT
 bibliography: MEAT.bib
@@ -10,7 +10,7 @@ date: "`r Sys.Date()`"
 output:  BiocStyle::html_vignette
 vignette: >
   %\VignetteIndexEntry{MEAT}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -41,11 +41,11 @@ You can view MEAT as a spellbook (package) that contains all the necessary spell
 ```{r Information on CpGs in MEAT, eval=FALSE}
 data("CpGs_in_MEAT",envir = environment())
 ```
-* [the updated version (MEAT 2.0)](https://www.biorxiv.org/content/10.1101/2020.09.28.315838v1) that was built on 1,053 samples from 16 independent datasets. This clock estimates epigenetic age based on 156 CpGs.To access the name and coefficients of these 156 CpGs, run:
+* [the updated version (MEAT 2.0)](https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12741) that was built on 1,053 samples from 16 independent datasets. This clock estimates epigenetic age based on 156 CpGs.To access the name and coefficients of these 156 CpGs, run:
 ```{r Information on CpGs in MEAT2.0, eval=FALSE}
 data("CpGs_in_MEAT2.0",envir = environment())
 ```
-For more information on MEAT and MEAT 2.0, see [our BioRxiv paper](https://www.biorxiv.org/content/10.1101/2020.09.28.315838v1). You have the choice to use MEAT or MEAT 2.0 in this package.
+For more information on MEAT and MEAT 2.0, see [our JCSM paper](https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12741). You have the choice to use MEAT or MEAT 2.0 in this package.
 
 Once MEAT has calculated epigenetic age, you may provide the actual age of each sample (if known), so MEAT can also calculate age acceleration as the difference between epigenetic age and real age (AAdiff), and as the residuals from a linear regression of epigenetic age against real age (AAresid). For more information on the distinction between AAdiff and AAresid, see [our original paper](https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12556).
 
