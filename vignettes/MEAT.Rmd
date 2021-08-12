@@ -10,7 +10,7 @@ date: "`r Sys.Date()`"
 output:  BiocStyle::html_vignette
 vignette: >
   %\VignetteIndexEntry{MEAT}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 

@@ -17,6 +17,8 @@
 #'   Project and GeneHancer information from the Genome Browser (hg38).}
 #'   \item{Chromatin_state_male_SM}{Chromatin state in male skeletal muscle
 #'   from the the Roadmap Epigenomics Project)}
+#'   \item{Chromatin_state_female_SM}{Chromatin state in female skeletal muscle
+#'   from the the Roadmap Epigenomics Project)}
 #'   }
-#' @source \url{https://www.biorxiv.org/content/10.1101/2020.09.28.315838v1}
+#' @source \url{https://onlinelibrary.wiley.com/doi/full/10.1002/jcsm.12741}
 "CpGs_in_MEAT2.0"

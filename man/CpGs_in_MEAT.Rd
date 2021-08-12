@@ -7,9 +7,8 @@
 \format{
 A data frame with 201 rows and 6 variables:
 \describe{
-\item{CpGs}{CpG name}
-\item{Coefficient}{Weight given by the elastic net model to the CpG in the
-to estimate epigenetic age}
+\item{CpG}{CpG name}
+\item{Coefficient}{Weight given by the elastic net model to the CpG}
 \item{Chromosome}{Chromosome where the CpG is located}
 \item{Position}{Position in bp where the CpG is located (human genome
 build version hg38)}

@@ -1,6 +1,6 @@
 Package: MEAT
 Title: Muscle Epigenetic Age Test
-Version: 1.5.0
+Version: 1.5.1
 Authors@R: c(
     person(given = "Sarah",
            family = "Voisin",
@@ -24,7 +24,7 @@ Imports: impute (>= 1.58), dynamicTreeCut (>= 1.63), glmnet (>= 2.0),
         grDevices, graphics, stats, utils, stringr, tibble, RPMM (>=
         1.25), minfi (>= 1.30), dplyr, SummarizedExperiment, wateRmelon
 VignetteBuilder: knitr
-Suggests: knitr, rmarkdown, BiocStyle, testthat (>= 2.1.0)
+Suggests: knitr, markdown, rmarkdown, BiocStyle, testthat (>= 2.1.0)
 biocViews: Epigenetics, DNAMethylation, Microarray, Normalization,
         BiomedicalInformatics, MethylationArray, Preprocessing
 Roxygen: list(markdown = TRUE)
