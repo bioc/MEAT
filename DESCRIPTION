@@ -1,6 +1,6 @@
 Package: MEAT
 Title: Muscle Epigenetic Age Test
-Version: 1.9.0
+Version: 1.10.0
 Authors@R: c(
     person(given = "Sarah",
            family = "Voisin",
